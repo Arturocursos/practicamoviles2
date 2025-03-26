@@ -3,172 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Autenticación Corporativa</title>
-  <style>
-    :root {
-      --primary: #4f46e5;
-      --danger: #ef4444;
-    }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f8fafc;
-      display: grid;
-      place-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-    .card {
-      background: white;
-      width: 100%;
-      max-width: 450px;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-    }
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    button {
-      width: 100%;
-      padding: 0.75rem;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    button:hover {
-      background: #4338ca;
-    }
-    .hidden {
-      display: none;
-    }
-    .error {
-      color: var(--danger);
-      margin-top: 1rem;
-      text-align: center;
-    }
-    .user-panel {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background: #f0fdf4;
-      border-radius: 8px;
-    }
-  </style>
+  <title>Sistema de Autenticación</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- SDK Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <div class="card">
-    <!-- Sección Login -->
-    <div id="loginSection">
-      <h1 style="text-align: center; margin-bottom: 2rem;">Acceso al Sistema</h1>
-      
-      <div class="form-group">
-        <label for="identificacion">Identificación</label>
-        <input type="number" id="identificacion" placeholder="Ej: 123456789">
-      </div>
-      
-      <div class="form-group">
-        <label for="clave">Contraseña</label>
-        <input type="password" id="clave" placeholder="Ingresa tu contraseña">
-      </div>
-      
-      <button onclick="login()">Ingresar</button>
-      <p id="errorMsg" class="error"></p>
+  <div class="container">
+    <!-- Formulario de Registro -->
+    <div id="registerSection" class="form-section">
+      <h2>Registro de Usuarios</h2>
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="regIdentificacion">Identificación:</label>
+          <input type="number" id="regIdentificacion" required>
+        </div>
+        <div class="form-group">
+          <label for="regNombre">Nombre Completo:</label>
+          <input type="text" id="regNombre" required>
+        </div>
+        <div class="form-group">
+          <label for="regEmail">Correo Electrónico:</label>
+          <input type="email" id="regEmail" required>
+        </div>
+        <div class="form-group">
+          <label for="regPassword">Contraseña (mínimo 6 caracteres):</label>
+          <input type="password" id="regPassword" minlength="6" required>
+        </div>
+        <div class="form-group">
+          <label for="regTipoUsuario">Tipo de Usuario:</label>
+          <select id="regTipoUsuario" required>
+            <option value="normal">Usuario Normal</option>
+            <option value="admin">Administrador</option>
+            <option value="superadmin">Superadministrador</option>
+          </select>
+        </div>
+        <button type="submit">Registrarse</button>
+      </form>
+      <p id="registerError" class="error-message"></p>
+      <p>¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión aquí</a></p>
     </div>
 
-    <!-- Sección Usuario -->
-    <div id="userSection" class="hidden">
-      <div class="user-panel">
-        <h2 style="margin-top: 0;">Bienvenido, <span id="nombreUsuario"></span></h2>
-        <p><strong>Identificación:</strong> <span id="userId"></span></p>
-        <p><strong>Rol:</strong> <span id="userRole"></span></p>
-        <button onclick="logout()" style="margin-top: 1.5rem;">Cerrar Sesión</button>
-      </div>
+    <!-- Formulario de Login -->
+    <div id="loginSection" class="form-section hidden">
+      <h2>Inicio de Sesión</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginIdentificacion">Identificación:</label>
+          <input type="number" id="loginIdentificacion" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Contraseña:</label>
+          <input type="password" id="loginPassword" required>
+        </div>
+        <button type="submit">Ingresar</button>
+      </form>
+      <p id="loginError" class="error-message"></p>
+      <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate aquí</a></p>
+    </div>
+
+    <!-- Panel del Usuario -->
+    <div id="userPanel" class="hidden">
+      <h2>Bienvenido, <span id="userName"></span></h2>
+      <p><strong>ID:</strong> <span id="userId"></span></p>
+      <p><strong>Rol:</strong> <span id="userRole"></span></p>
+      <p><strong>Email:</strong> <span id="userEmail"></span></p>
+      <button id="logoutBtn">Cerrar Sesión</button>
     </div>
   </div>
 
-  <!-- SDK Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
